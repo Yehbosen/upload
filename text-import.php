@@ -27,7 +27,49 @@
 
 <!----讀出匯入完成的資料----->
 
+<?php
+/*
+1.讀入檔案
+    fopen()
+2.讀入每一行的資料
+    fgets()/fgetcsv()
+3.解析每一行的欄位
+    explode()
+4.串成SQl語法
+    sql=INSERT INTO `retire` (`id`, `year`, `num`, `pro`) VALUES (NULL, '', '', '')
+5.寫入資料庫
+    pdo連線
+6迴圈
+    while()
+7.判斷是否還有資料
+    feof()
+8.掠過標題
+    if...
+*/
+
+$dsn="mysql:host=localhost;charset=utf8;dbname=etax";
+$pdo=new PDO($dsn,"root","1740");
+
+$file=fopen("台灣糖業公司_近5年退休人數.csv","r");
+$line=fgets($file); //從第一行開始讀起 但是不處理第一行資料
+
+while(!feof($file)){
+    $line=fgets($file);    //從第二行開始
+    //echo $line;
+    //echo "<br>";
+    $data=explode(",",$line);
+    //print_r($data);
+    if(count($data)>1){
+
+    
+    $sql="INSERT INTO `retire` (`id`, `year`, `num`, `pro`) VALUES (NULL," . $data[0] . "," . $data[1] . "," . $data[2] . ")";
+    // echo $sql;
+    $pdo->exec($sql);  //寫入資料庫
+    }
+}
 
 
+
+?>
 </body>
 </html>
